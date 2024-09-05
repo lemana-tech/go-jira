@@ -27,6 +27,6 @@ func TestJWTAuthTransport_HeaderContainsJWT(t *testing.T) {
 		}
 	})
 
-	jwtClient, _ := NewClient(testServer.URL, jwtTransport.Client())
+	jwtClient, _ := NewClient(testServer.URL, WithHTTPClient(jwtTransport.Client()))
 	jwtClient.Issue.Get(context.Background(), "TEST-1", nil)
 }

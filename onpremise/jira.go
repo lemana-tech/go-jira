@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strings"
 	"sync"
@@ -16,9 +18,9 @@ import (
 )
 
 const (
-	ClientVersion = "2.0.0"
+	clientVersion = "2.0.0"
 
-	defaultUserAgent = "go-jira" + "/" + ClientVersion
+	defaultUserAgent = "go-jira" + "/" + clientVersion
 )
 
 // A Client manages communication with the Jira API.
@@ -37,6 +39,11 @@ type Client struct {
 	// Session storage if the user authenticates with a Session cookie
 	// TODO Needed in Cloud and/or onpremise?
 	session *Session
+
+	// Logger is the structured logger to use for logging purposes. If none is
+	// specified, logs will be emitted to STDOUT with messages at warn level
+	// or higher.
+	logger *slog.Logger
 
 	// Reuse a single struct instead of allocating one for each service on the heap.
 	common service
@@ -81,14 +88,8 @@ func (c *Client) Client() *http.Client {
 }
 
 // NewClient returns a new Jira API client with provided base URL (often is your Jira hostname)
-// If a nil httpClient is provided, a new http.Client will be used.
-// To use API methods which require authentication, provide an http.Client that will perform the authentication for you (such as that provided by the golang.org/x/oauth2 library).
 // baseURL is the HTTP endpoint of your Jira instance and should always be specified with a trailing slash.
-func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
-	if httpClient == nil {
-		httpClient = &http.Client{}
-	}
-
+func NewClient(baseURL string, opts ...Opt) (*Client, error) {
 	baseEndpoint, err := url.Parse(baseURL)
 	if err != nil {
 		return nil, err
@@ -98,11 +99,20 @@ func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
 		baseEndpoint.Path += "/"
 	}
 
+	lgr := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelWarn,
+	}))
+
 	c := &Client{
-		client:    httpClient,
+		client:    &http.Client{},
 		BaseURL:   baseEndpoint,
 		UserAgent: defaultUserAgent,
+		logger:    lgr,
 	}
+	for _, opt := range opts {
+		opt(c)
+	}
+
 	c.common.client = c
 
 	// TODO Check if the authentication service is still needed (because of the transports)
@@ -298,7 +308,11 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 
 	if v != nil {
 		// Open a NewDecoder and defer closing the reader only if there is a provided interface to decode to
-		defer httpResp.Body.Close()
+		defer func() {
+			if err = httpResp.Body.Close(); err != nil {
+				c.logger.Warn("failed to close response body", "error", err)
+			}
+		}()
 		err = json.NewDecoder(httpResp.Body).Decode(v)
 	}
 

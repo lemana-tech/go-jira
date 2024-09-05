@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	jira "github.com/andygrunwald/go-jira/v2/onpremise"
+	jira "github.com/lemana-tech/go-jira/v2/onpremise"
 )
 
 func main() {
@@ -15,7 +15,9 @@ func main() {
 	tp := jira.BearerAuthTransport{
 		Token: "<persona-access-token>",
 	}
-	client, err := jira.NewClient(jiraURL, tp.Client())
+	o := jira.WithHTTPClient(tp.Client())
+
+	client, err := jira.NewClient(jiraURL, o)
 	if err != nil {
 		panic(err)
 	}

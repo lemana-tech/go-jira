@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	jira "github.com/andygrunwald/go-jira/v2/onpremise"
+	jira "github.com/lemana-tech/go-jira/v2/onpremise"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	}
 	client := &http.Client{Transport: tr}
 
-	jiraClient, _ := jira.NewClient("https://issues.apache.org/jira/", client)
+	jiraClient, _ := jira.NewClient("https://issues.apache.org/jira/", jira.WithHTTPClient(client))
 	issue, _, _ := jiraClient.Issue.Get(context.Background(), "MESOS-3325", nil)
 
 	fmt.Printf("%s: %+v\n", issue.Key, issue.Fields.Summary)

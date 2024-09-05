@@ -1,6 +1,6 @@
-module github.com/andygrunwald/go-jira/v2
+module github.com/lemana-tech/go-jira/v2
 
-go 1.18
+go 1.21
 
 require (
 	github.com/fatih/structs v1.1.0
