@@ -36,8 +36,9 @@ func main() {
 		Username: strings.TrimSpace(username),
 		Password: strings.TrimSpace(password),
 	}
+	o := jira.WithHttpClient(tp.Client())
 
-	client, err := jira.NewClient(strings.TrimSpace(jiraURL), tp.Client())
+	client, err := jira.NewClient(strings.TrimSpace(jiraURL), o)
 	if err != nil {
 		fmt.Printf("\nerror: %v\n", err)
 		os.Exit(1)

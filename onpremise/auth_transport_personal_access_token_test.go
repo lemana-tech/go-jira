@@ -24,7 +24,7 @@ func TestPATAuthTransport_HeaderContainsAuth(t *testing.T) {
 		}
 	})
 
-	client, _ := NewClient(testServer.URL, patTransport.Client())
+	client, _ := NewClient(testServer.URL, WithHttpClient(patTransport.Client()))
 	client.User.GetSelf(context.Background())
 
 }

@@ -88,7 +88,7 @@ func TestNewClient_WithHttpClient(t *testing.T) {
 	httpClient := http.DefaultClient
 	httpClient.Timeout = 10 * time.Minute
 
-	c, err := NewClient(testJiraInstanceURL, httpClient)
+	c, err := NewClient(testJiraInstanceURL, WithHttpClient(httpClient))
 	if err != nil {
 		t.Errorf("Got an error: %s", err)
 	}
@@ -102,7 +102,7 @@ func TestNewClient_WithHttpClient(t *testing.T) {
 }
 
 func TestNewClient_WithServices(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 
 	if err != nil {
 		t.Errorf("Got an error: %s", err)
@@ -158,7 +158,7 @@ func TestCheckResponse(t *testing.T) {
 }
 
 func TestClient_NewRequest(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -180,7 +180,7 @@ func TestClient_NewRequest(t *testing.T) {
 }
 
 func TestClient_NewRawRequest(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -213,7 +213,7 @@ func testURLParseError(t *testing.T, err error) {
 }
 
 func TestClient_NewRequest_BadURL(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -222,7 +222,7 @@ func TestClient_NewRequest_BadURL(t *testing.T) {
 }
 
 func TestClient_NewRequest_SessionCookies(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -251,7 +251,7 @@ func TestClient_NewRequest_SessionCookies(t *testing.T) {
 }
 
 func TestClient_NewRequest_BasicAuth(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -277,7 +277,7 @@ func TestClient_NewRequest_BasicAuth(t *testing.T) {
 // since there is no difference between an HTTP request body that is an empty string versus one that is not set at all.
 // However in certain cases, intermediate systems may treat these differently resulting in subtle errors.
 func TestClient_NewRequest_EmptyBody(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -291,7 +291,7 @@ func TestClient_NewRequest_EmptyBody(t *testing.T) {
 }
 
 func TestClient_NewMultiPartRequest(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}
@@ -324,7 +324,7 @@ func TestClient_NewMultiPartRequest(t *testing.T) {
 }
 
 func TestClient_NewMultiPartRequest_BasicAuth(t *testing.T) {
-	c, err := NewClient(testJiraInstanceURL, nil)
+	c, err := NewClient(testJiraInstanceURL)
 	if err != nil {
 		t.Errorf("An error occurred. Expected nil. Got %+v.", err)
 	}

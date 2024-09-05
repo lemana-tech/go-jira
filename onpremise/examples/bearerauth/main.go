@@ -15,7 +15,9 @@ func main() {
 	tp := jira.BearerAuthTransport{
 		Token: "<persona-access-token>",
 	}
-	client, err := jira.NewClient(jiraURL, tp.Client())
+	o := jira.WithHttpClient(tp.Client())
+
+	client, err := jira.NewClient(jiraURL, o)
 	if err != nil {
 		panic(err)
 	}
