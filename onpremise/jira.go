@@ -109,11 +109,11 @@ func NewClient(baseURL string, opts ...Opt) (*Client, error) {
 		UserAgent: defaultUserAgent,
 		logger:    lgr,
 	}
-	c.common.client = c
-
 	for _, opt := range opts {
 		opt(c)
 	}
+
+	c.common.client = c
 
 	// TODO Check if the authentication service is still needed (because of the transports)
 	c.Authentication = &AuthenticationService{client: c}

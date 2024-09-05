@@ -37,7 +37,7 @@ func setup() {
 	testServer = httptest.NewServer(testMux)
 
 	// jira client configured to use test server
-	testClient, _ = NewClient(testServer.URL, nil)
+	testClient, _ = NewClient(testServer.URL)
 }
 
 // teardown closes the test HTTP server.
