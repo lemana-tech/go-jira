@@ -1,6 +1,6 @@
 package onpremise
 
-import 
+import (
 	"bytes"
 	"context"
 	"encoding/json"
@@ -15,12 +15,12 @@ import
 	"sync"
 
 	"github.com/google/go-querystring/query"
-
+)
 
 const (
-	ClientVersion = "2.0.0"
+	clientVersion = "2.0.0"
 
-	defaultUserAgent = "go-jira" + "/" + ClientVersion
+	defaultUserAgent = "go-jira" + "/" + clientVersion
 )
 
 // A Client manages communication with the Jira API.
@@ -298,11 +298,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if err := httpResp.Body.Close(); err != nil {
-			c.logger.Warn("failed to close response body", "error", err)
-		}
-	}()
 
 	err = CheckResponse(httpResp)
 	if err != nil {
@@ -312,6 +307,12 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	}
 
 	if v != nil {
+		// Open a NewDecoder and defer closing the reader only if there is a provided interface to decode to
+		defer func() {
+			if err = httpResp.Body.Close(); err != nil {
+				c.logger.Warn("failed to close response body", "error", err)
+			}
+		}()
 		err = json.NewDecoder(httpResp.Body).Decode(v)
 	}
 

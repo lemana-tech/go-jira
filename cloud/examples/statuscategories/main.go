@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	jira "github.com/andygrunwald/go-jira/v2/cloud"
+	jira "github.com/lemana-tech/go-jira/v2/cloud"
 )
 
 func main() {
