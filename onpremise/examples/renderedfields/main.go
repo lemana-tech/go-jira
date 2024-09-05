@@ -44,7 +44,7 @@ func main() {
 		tp = ba.Client()
 	}
 
-	client, err := jira.NewClient(strings.TrimSpace(jiraURL), jira.WithHttpClient(tp))
+	client, err := jira.NewClient(strings.TrimSpace(jiraURL), jira.WithHTTPClient(tp))
 	if err != nil {
 		fmt.Printf("\nerror: %v\n", err)
 		return

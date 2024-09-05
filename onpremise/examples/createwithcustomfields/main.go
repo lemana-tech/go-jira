@@ -36,7 +36,7 @@ func main() {
 		Username: strings.TrimSpace(username),
 		Password: strings.TrimSpace(password),
 	}
-	o := jira.WithHttpClient(tp.Client())
+	o := jira.WithHTTPClient(tp.Client())
 
 	client, err := jira.NewClient(strings.TrimSpace(jiraURL), o)
 	if err != nil {

@@ -88,7 +88,7 @@ func TestNewClient_WithHttpClient(t *testing.T) {
 	httpClient := http.DefaultClient
 	httpClient.Timeout = 10 * time.Minute
 
-	c, err := NewClient(testJiraInstanceURL, WithHttpClient(httpClient))
+	c, err := NewClient(testJiraInstanceURL, WithHTTPClient(httpClient))
 	if err != nil {
 		t.Errorf("Got an error: %s", err)
 	}

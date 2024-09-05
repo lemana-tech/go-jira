@@ -8,8 +8,8 @@ import (
 // Opt func type
 type Opt func(c *Client)
 
-// WithHttpClient sets the http.Client to use for API requests.
-func WithHttpClient(hc *http.Client) Opt {
+// WithHTTPClient sets the http.Client to use for API requests.
+func WithHTTPClient(hc *http.Client) Opt {
 	return func(c *Client) {
 		c.client = hc
 	}
